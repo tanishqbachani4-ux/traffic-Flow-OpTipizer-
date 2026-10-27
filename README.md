@@ -1,5 +1,5 @@
-# traffic-Flow-OpTipizer-
-<!DOCTYPE html>
+
+<html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -89,14 +89,14 @@ footer{text-align:center;padding:15px;color:#9eacc2;font-size:12px}
 </div>
 <div class="buttons">
   <button class="primary" id="start">▶ Start Simulation</button>
-  <button id="pause">⏸ Pause</button>
+  <button id="pause"> Pause</button>
   <button class="reset" id="reset">↻ Reset</button>
 </div>
 <div class="status" id="status">Status: <b>Ready to start</b></div>
 </section>
 
 <section class="panel">
-<h2>🛣️ Four-Way Intersection</h2>
+<h2> Four-Way Intersection</h2>
 <div class="road-wrap">
 <div class="intersection" id="intersection">
   <div class="road-h"></div><div class="road-v"></div>
@@ -112,7 +112,7 @@ footer{text-align:center;padding:15px;color:#9eacc2;font-size:12px}
 </section>
 
 <section class="panel">
-<h2>📊 Live Simulation Statistics</h2>
+<h2> Live Simulation Statistics</h2>
 <div class="stats">
   <div class="stat"><span>Vehicles Processed</span><strong id="processed">0</strong></div>
   <div class="stat"><span>Estimated Waiting Time</span><strong><span id="wait" style="display:inline;color:inherit;font-size:27px">0</span> s</strong></div>
@@ -123,7 +123,7 @@ footer{text-align:center;padding:15px;color:#9eacc2;font-size:12px}
 </section>
 
 <section class="panel">
-<h2>💡 How It Works</h2>
+<h2> How It Works</h2>
 <p><b>Fixed Timing:</b> The traffic lights switch at a preset interval.</p>
 <p><b>AI Adaptive Mode:</b> A simplified rule-based model gives more green time to the direction with heavier traffic.</p>
 <p><b>Project Goal:</b> Explore how adaptive signal timing may reduce waiting and improve traffic flow at a four-way intersection.</p>
