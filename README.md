@@ -1,250 +1,534 @@
-
-<html>
+```html
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Traffic Flow Optimizer | Tanishq Bachani</title>
-<style>
-*{box-sizing:border-box}
-body{margin:0;font-family:Arial,sans-serif;background:#0b1220;color:#eef4ff}
-header{text-align:center;padding:22px 12px;background:linear-gradient(135deg,#102b50,#126e75)}
-header h1{margin:0;font-size:clamp(24px,5vw,38px)}
-header p{margin:9px 0 0;color:#d4e8f8}
-.container{max-width:1050px;margin:auto;padding:16px}
-.panel{background:#151f32;border:1px solid #2c3c56;border-radius:15px;padding:16px;margin-bottom:16px}
-h2{font-size:20px;margin:0 0 14px}
-.controls{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
-label{display:block;font-weight:bold;margin-bottom:8px}
-select,input[type=range]{width:100%}
-select,button{padding:11px;border-radius:8px;border:1px solid #435572;background:#202e44;color:white}
-input[type=range]{accent-color:#29d5c0}
-button{cursor:pointer;font-weight:bold}
-button:hover{filter:brightness(1.15)}
-.buttons{display:flex;flex-wrap:wrap;gap:9px;margin-top:15px}
-.primary{background:#087f8c;border-color:#12b7b5}
-.reset{background:#34445d}
-.stats{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
-.stat{background:#202d42;border-radius:10px;padding:14px;text-align:center}
-.stat strong{display:block;font-size:27px;color:#42e2cf;margin-top:5px}
-.stat span{font-size:13px;color:#c3d1e4}
-.road-wrap{overflow:hidden;border-radius:12px;background:#172a2a;padding:10px}
-.intersection{height:320px;position:relative;overflow:hidden;background:#31534a;border-radius:8px}
-.road-h,.road-v{position:absolute;background:#303946}
-.road-h{height:100px;width:100%;top:110px}
-.road-v{width:100px;height:100%;left:calc(50% - 50px)}
-.line-h{position:absolute;left:0;right:0;top:159px;border-top:3px dashed #e6e9d8}
-.line-v{position:absolute;top:0;bottom:0;left:calc(50% - 1px);border-left:3px dashed #e6e9d8}
-.stop{position:absolute;background:#f8fafc}
-.stop-top{width:65px;height:5px;top:105px;left:calc(50% - 82px)}
-.stop-bottom{width:65px;height:5px;top:210px;left:calc(50% + 17px)}
-.stop-left{height:65px;width:5px;left:calc(50% - 55px);top:30px}
-.stop-right{height:65px;width:5px;left:calc(50% + 50px);top:225px}
-.light{position:absolute;z-index:5;background:#101820;padding:5px;border-radius:8px;display:flex;gap:4px}
-.light i{width:13px;height:13px;border-radius:50%;background:#38414b}
-.light .red.on{background:#ff4c5b;box-shadow:0 0 8px #ff4c5b}
-.light .yellow.on{background:#ffd166;box-shadow:0 0 8px #ffd166}
-.light .green.on{background:#30e58b;box-shadow:0 0 8px #30e58b}
-.lt{top:72px;left:calc(50% - 95px)}
-.lb{bottom:72px;right:calc(50% - 95px)}
-.car{position:absolute;width:19px;height:34px;border-radius:5px;background:#48b9ff;border:2px solid #d9f3ff;z-index:3;box-shadow:0 2px 5px #1118}
-.car.hcar{width:34px;height:18px}
-.car.c2{background:#ffb454}
-.car.c3{background:#d58bff}
-.car.c4{background:#f6e66c}
-#cars{position:absolute;inset:0;pointer-events:none}
-.legend{font-size:12px;color:#c3d1e4;margin-top:9px}
-.status{padding:11px;border-radius:8px;background:#202d42;margin-top:13px}
-.status b{color:#45e2ce}
-footer{text-align:center;padding:15px;color:#9eacc2;font-size:12px}
-@media(max-width:500px){.intersection{height:270px}.road-h{top:90px}.road-v{left:calc(50% - 42px);width:84px}.line-h{top:132px}.line-v{left:calc(50% - 1px)}.stop-top{top:85px}.stop-bottom{top:180px}.stop-left{left:calc(50% - 47px);top:20px}.stop-right{left:calc(50% + 42px);top:190px}.lt{top:55px;left:calc(50% - 88px)}.lb{bottom:55px;right:calc(50% - 88px)}}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bhopal Smart Signals - Traffic Flow Optimizer</title>
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --panel-bg: #1e293b;
+            --accent-blue: #38bdf8;
+            --accent-green: #22c55e;
+            --accent-red: #ef4444;
+            --accent-yellow: #eab308;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            padding: 15px;
+        }
+
+        header {
+            background: var(--panel-bg);
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-left: 5px solid var(--accent-blue);
+        }
+
+        header h1 {
+            font-size: 1.4rem;
+            color: var(--text-main);
+        }
+
+        header p {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .team-badge {
+            background: rgba(56, 189, 248, 0.1);
+            color: var(--accent-blue);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            border: 1px solid rgba(56, 189, 248, 0.3);
+        }
+
+        .main-container {
+            display: grid;
+            grid-template-columns: 1fr 340px;
+            gap: 15px;
+            flex: 1;
+        }
+
+        @media (max-width: 900px) {
+            .main-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .simulation-panel {
+            background: var(--panel-bg);
+            border-radius: 10px;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        canvas {
+            background: #273549;
+            border-radius: 8px;
+            max-width: 100%;
+            height: auto;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+        }
+
+        .controls-panel {
+            background: var(--panel-bg);
+            border-radius: 10px;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .panel-section {
+            background: rgba(15, 23, 42, 0.6);
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .panel-section h3 {
+            font-size: 0.95rem;
+            margin-bottom: 10px;
+            color: var(--accent-blue);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .control-group {
+            margin-bottom: 10px;
+        }
+
+        .control-group:last-child {
+            margin-bottom: 0;
+        }
+
+        label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            accent-color: var(--accent-blue);
+        }
+
+        .btn-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+
+        button {
+            padding: 10px;
+            border: none;
+            border-radius: 6px;
+            font-weight: bold;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: var(--accent-blue);
+            color: #0f172a;
+        }
+
+        .btn-primary:hover {
+            background: #0284c7;
+            color: white;
+        }
+
+        .btn-mode {
+            background: rgba(255,255,255,0.1);
+            color: var(--text-main);
+        }
+
+        .btn-mode.active-fixed {
+            background: var(--accent-yellow);
+            color: #0f172a;
+        }
+
+        .btn-mode.active-smart {
+            background: var(--accent-green);
+            color: #0f172a;
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+
+        .metric-card {
+            background: rgba(255,255,255,0.03);
+            padding: 8px;
+            border-radius: 6px;
+            text-align: center;
+        }
+
+        .metric-value {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--text-main);
+        }
+
+        .metric-label {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+        }
+
+        .comparison-box {
+            font-size: 0.75rem;
+            line-height: 1.4;
+            color: var(--text-muted);
+        }
+
+        .status-pill {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 0.75rem;
+            font-weight: bold;
+        }
+
+        .status-ns {
+            background: rgba(34, 197, 94, 0.2);
+            color: var(--accent-green);
+        }
+
+        .status-ew {
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--accent-red);
+        }
+    </style>
 </head>
 <body>
-<header>
-  <h1>🚦 Traffic Flow Optimizer</h1>
-  <p>HCL Jigsaw 7.0 · AI Revolution & Digital Futures</p>
-  <p>Created by Tanishq Bachani and Team</p>
-</header>
 
-<main class="container">
-<section class="panel">
-<h2>⚙️ Simulation Controls</h2>
-<div class="controls">
-  <div>
-    <label for="mode">Signal Control Mode</label>
-    <select id="mode">
-      <option value="ai">AI Adaptive Mode</option>
-      <option value="fixed">Fixed Timing Mode</option>
-    </select>
-  </div>
-  <div>
-    <label for="ns">North–South Traffic: <span id="nsVal">60</span>%</label>
-    <input id="ns" type="range" min="10" max="100" value="60">
-  </div>
-  <div>
-    <label for="ew">East–West Traffic: <span id="ewVal">40</span>%</label>
-    <input id="ew" type="range" min="10" max="100" value="40">
-  </div>
-</div>
-<div class="buttons">
-  <button class="primary" id="start">▶ Start Simulation</button>
-  <button id="pause"> Pause</button>
-  <button class="reset" id="reset">↻ Reset</button>
-</div>
-<div class="status" id="status">Status: <b>Ready to start</b></div>
-</section>
+    <header>
+        <div>
+            <h1>Traffic Flow Optimizer</h1>
+            <p>HCL JIGSAW Edition 7 · Grade 8 Model</p>
+        </div>
+        <div class="team-badge">Team: Bhopal Smart Signals</div>
+    </header>
 
-<section class="panel">
-<h2> Four-Way Intersection</h2>
-<div class="road-wrap">
-<div class="intersection" id="intersection">
-  <div class="road-h"></div><div class="road-v"></div>
-  <div class="line-h"></div><div class="line-v"></div>
-  <div class="stop stop-top"></div><div class="stop stop-bottom"></div>
-  <div class="stop stop-left"></div><div class="stop stop-right"></div>
-  <div class="light lt" id="lightNS"><i class="red on"></i><i class="yellow"></i><i class="green"></i></div>
-  <div class="light lb" id="lightEW"><i class="red on"></i><i class="yellow"></i><i class="green"></i></div>
-  <div id="cars"></div>
-</div>
-<div class="legend">Illustrative intersection • Blue, orange, purple and yellow vehicles represent traffic.</div>
-</div>
-</section>
+    <div class="main-container">
+        <!-- Canvas Simulation Area -->
+        <div class="simulation-panel">
+            <canvas id="simCanvas" width="500" height="500"></canvas>
+        </div>
 
-<section class="panel">
-<h2> Live Simulation Statistics</h2>
-<div class="stats">
-  <div class="stat"><span>Vehicles Processed</span><strong id="processed">0</strong></div>
-  <div class="stat"><span>Estimated Waiting Time</span><strong><span id="wait" style="display:inline;color:inherit;font-size:27px">0</span> s</strong></div>
-  <div class="stat"><span>Traffic Density</span><strong id="density">50%</strong></div>
-  <div class="stat"><span>Signal Changes</span><strong id="changes">0</strong></div>
-</div>
-<p class="legend">These are simulated estimates for a school project, not measurements from a real road or a trained AI system.</p>
-</section>
+        <!-- Right Side Control Dashboard -->
+        <div class="controls-panel">
+            
+            <!-- Mode Selector -->
+            <div class="panel-section">
+                <h3>Signal Mode</h3>
+                <div class="btn-group">
+                    <button id="btnFixed" class="btn-mode active-fixed" onclick="setMode('fixed')">Fixed (10s)</button>
+                    <button id="btnSmart" class="btn-mode" onclick="setMode('smart')">Smart (5-20s)</button>
+                </div>
+            </div>
 
-<section class="panel">
-<h2> How It Works</h2>
-<p><b>Fixed Timing:</b> The traffic lights switch at a preset interval.</p>
-<p><b>AI Adaptive Mode:</b> A simplified rule-based model gives more green time to the direction with heavier traffic.</p>
-<p><b>Project Goal:</b> Explore how adaptive signal timing may reduce waiting and improve traffic flow at a four-way intersection.</p>
-</section>
-</main>
+            <!-- Inputs / Sliders -->
+            <div class="panel-section">
+                <h3>Traffic Arrival Rates</h3>
+                <div class="control-group">
+                    <label>North - South Traffic: <span id="nsValue">6 veh/min (90/15m)</span></label>
+                    <input type="range" id="nsRate" min="2" max="20" value="6" oninput="updateSliders()">
+                </div>
+                <div class="control-group">
+                    <label>East - West Traffic: <span id="ewValue">12 veh/min (180/15m)</span></label>
+                    <input type="range" id="ewRate" min="2" max="20" value="12" oninput="updateSliders()">
+                </div>
+            </div>
 
-<footer>
-Mithi Gobindram Public School, Bhopal<br>
-Team: Tanishq Bachani · Jayesh Managlani · Lakshya Damani · Rishabh Adwani
-</footer>
+            <!-- Signal Status -->
+            <div class="panel-section">
+                <h3>Active Signal Timing</h3>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
+                    <span style="font-size: 0.85rem;">Active Green Phase:</span>
+                    <span id="activePhase" class="status-pill status-ns">North - South</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <span style="font-size: 0.85rem;">Phase Time Left:</span>
+                    <span id="timerDisplay" style="font-weight: bold; color: var(--accent-blue);">10.0 s</span>
+                </div>
+            </div>
 
-<script>
-const $ = id => document.getElementById(id);
-let running = false, timer = null, seconds = 0, processed = 0, changes = 0;
-let phase = "NS", phaseTime = 0;
+            <!-- Results Metrics -->
+            <div class="panel-section">
+                <h3>Live Simulation Metrics</h3>
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <div class="metric-value" id="passedCount">0</div>
+                        <div class="metric-label">Vehicles Passed</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value" id="avgWait">0.0s</div>
+                        <div class="metric-label">Avg Wait Time</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value" id="queueNS">0</div>
+                        <div class="metric-label">N-S Queue</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value" id="queueEW">0</div>
+                        <div class="metric-label">E-W Queue</div>
+                    </div>
+                </div>
+            </div>
 
-function setStatus(message) {
-  $("status").innerHTML = "Status: <b>" + message + "</b>";
-}
-function setLight(id, colour) {
-  const lights = $(id).querySelectorAll("i");
-  lights.forEach(el => el.classList.remove("on"));
-  const index = {red:0, yellow:1, green:2}[colour];
-  lights[index].classList.add("on");
-}
-function updateLights() {
-  if (phase === "NS") {
-    setLight("lightNS","green"); setLight("lightEW","red");
-  } else {
-    setLight("lightNS","red"); setLight("lightEW","green");
-  }
-}
-function addCars() {
-  const holder = $("cars");
-  holder.innerHTML = "";
-  const ns = Number($("ns").value);
-  const ew = Number($("ew").value);
-  const countNS = Math.max(1, Math.round(ns / 18));
-  const countEW = Math.max(1, Math.round(ew / 18));
-  for (let i=0;i<countNS;i++) {
-    const car = document.createElement("div");
-    car.className = "car c" + (i%4+1);
-    car.style.left = "calc(50% - 10px)";
-    car.style.top = (8+i*25) + "px";
-    holder.appendChild(car);
-  }
-  for (let i=0;i<countEW;i++) {
-    const car = document.createElement("div");
-    car.className = "car hcar c" + (i%4+1);
-    car.style.top = "calc(50% - 9px)";
-    car.style.left = (8+i*38) + "px";
-    holder.appendChild(car);
-  }
-}
-function updateStats() {
-  const ns = Number($("ns").value);
-  const ew = Number($("ew").value);
-  $("processed").textContent = processed;
-  $("wait").textContent = Math.max(0, Math.round((ns+ew)/5 - (phaseTime%5)));
-  $("density").textContent = Math.round((ns+ew)/2) + "%";
-  $("changes").textContent = changes;
-}
-function tick() {
-  if (!running) return;
-  seconds++;
-  phaseTime++;
-  const mode = $("mode").value;
-  const ns = Number($("ns").value);
-  const ew = Number($("ew").value);
-  let duration = 8;
-  if (mode === "ai") {
-    duration = phase === "NS"
-      ? Math.max(5, Math.min(15, Math.round(5 + ns/10)))
-      : Math.max(5, Math.min(15, Math.round(5 + ew/10)));
-  }
-  if (phaseTime >= duration) {
-    phase = phase === "NS" ? "EW" : "NS";
-    phaseTime = 0;
-    changes++;
-    updateLights();
-  }
-  const active = phase === "NS" ? ns : ew;
-  processed += Math.max(1, Math.round(active/30));
-  updateStats();
-}
-function start() {
-  if (running) return;
-  running = true;
-  setStatus($("mode").value === "ai" ? "Running — AI Adaptive Mode" : "Running — Fixed Timing Mode");
-  timer = setInterval(tick, 1000);
-}
-function pause() {
-  running = false;
-  if (timer) clearInterval(timer);
-  timer = null;
-  setStatus("Paused");
-}
-function reset() {
-  pause();
-  seconds = 0; processed = 0; changes = 0; phaseTime = 0; phase = "NS";
-  updateLights(); updateStats(); addCars();
-  setStatus("Reset — ready to start");
-}
-$("start").addEventListener("click", start);
-$("pause").addEventListener("click", pause);
-$("reset").addEventListener("click", reset);
-["ns","ew"].forEach(id => $(id).addEventListener("input", () => {
-  $(id+"Val").textContent = $(id).value;
-  addCars(); updateStats();
-}));
-$("mode").addEventListener("change", () => {
-  if (running) {
-    pause();
-    start();
-  } else {
-    setStatus($("mode").value === "ai" ? "AI Adaptive Mode selected" : "Fixed Timing Mode selected");
-  }
-});
-updateLights();
-addCars();
-updateStats();
-</script>
+            <!-- Simulation Controls -->
+            <div class="btn-group">
+                <button class="btn-primary" id="btnPause" onclick="togglePause()">Pause</button>
+                <button style="background: rgba(255,255,255,0.1); color: white;" onclick="resetSim()">Reset Data</button>
+            </div>
+
+            <div class="comparison-box">
+                <b>Rules:</b> Fixed mode alternates 10s green lights. Smart mode calculates queue differential to award 5s–20s green lights dynamically.
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('simCanvas');
+        const ctx = canvas.getContext('2d');
+
+        // Simulation parameters
+        let mode = 'fixed';
+        let isPaused = false;
+        
+        let nsArrivalRate = 6;
+        let ewArrivalRate = 12;
+
+        // Signal Timer state
+        let currentGreen = 'NS';
+        let timerMax = 10;
+        let timerRemaining = 10;
+        let lastTime = performance.now();
+
+        // Queue & Analytics Data
+        let queues = { N: [], S: [], E: [], W: [] };
+        let activeVehicles = [];
+        let totalPassed = 0;
+        let totalWaitTime = 0;
+
+        function updateSliders() {
+            nsArrivalRate = parseInt(document.getElementById('nsRate').value);
+            ewArrivalRate = parseInt(document.getElementById('ewRate').value);
+
+            document.getElementById('nsValue').innerText = `${nsArrivalRate} veh/min (${nsArrivalRate * 15}/15m)`;
+            document.getElementById('ewValue').innerText = `${ewArrivalRate} veh/min (${ewArrivalRate * 15}/15m)`;
+        }
+
+        function setMode(newMode) {
+            mode = newMode;
+            document.getElementById('btnFixed').className = mode === 'fixed' ? 'btn-mode active-fixed' : 'btn-mode';
+            document.getElementById('btnSmart').className = mode === 'smart' ? 'btn-mode active-smart' : 'btn-mode';
+            resetSim();
+        }
+
+        function resetSim() {
+            queues = { N: [], S: [], E: [], W: [] };
+            activeVehicles = [];
+            totalPassed = 0;
+            totalWaitTime = 0;
+            currentGreen = 'NS';
+            timerRemaining = calculateNextGreenDuration('NS');
+            timerMax = timerRemaining;
+            lastTime = performance.now();
+        }
+
+        function togglePause() {
+            isPaused = !isPaused;
+            document.getElementById('btnPause').innerText = isPaused ? 'Resume' : 'Pause';
+        }
+
+        function calculateNextGreenDuration(direction) {
+            if (mode === 'fixed') {
+                return 10;
+            } else {
+                let nsQueueLen = queues.N.length + queues.S.length;
+                let ewQueueLen = queues.E.length + queues.W.length;
+
+                let queueDiff = direction === 'NS' ? (nsQueueLen - ewQueueLen) : (ewQueueLen - nsQueueLen);
+
+                let duration = 10 + Math.floor(queueDiff * 1.5);
+                return Math.max(5, Math.min(20, duration));
+            }
+        }
+
+        function spawnVehicles(dt) {
+            let nsProb = (nsArrivalRate / 60) * dt;
+            if (Math.random() < nsProb / 2) spawnVehicle('N');
+            if (Math.random() < nsProb / 2) spawnVehicle('S');
+
+            let ewProb = (ewArrivalRate / 60) * dt;
+            if (Math.random() < ewProb / 2) spawnVehicle('E');
+            if (Math.random() < ewProb / 2) spawnVehicle('W');
+        }
+
+        function spawnVehicle(dir) {
+            let car = {
+                dir: dir,
+                created: performance.now(),
+                passed: false
+            };
+            queues[dir].push(car);
+            activeVehicles.push(car);
+        }
+
+        function updateSimulation(dt) {
+            if (isPaused) return;
+
+            timerRemaining -= dt;
+            if (timerRemaining <= 0) {
+                currentGreen = currentGreen === 'NS' ? 'EW' : 'NS';
+                timerRemaining = calculateNextGreenDuration(currentGreen);
+                timerMax = timerRemaining;
+            }
+
+            spawnVehicles(dt);
+
+            let clearanceRate = dt / 1.2; 
+
+            if (currentGreen === 'NS') {
+                clearQueue('N', clearanceRate);
+                clearQueue('S', clearanceRate);
+            } else {
+                clearQueue('E', clearanceRate);
+                clearQueue('W', clearanceRate);
+            }
+
+            let now = performance.now();
+            ['N', 'S', 'E', 'W'].forEach(d => {
+                queues[d].forEach(car => {
+                    totalWaitTime += dt;
+                });
+            });
+
+            document.getElementById('timerDisplay').innerText = `${timerRemaining.toFixed(1)} s`;
+            let phaseDisplay = document.getElementById('activePhase');
+            phaseDisplay.innerText = currentGreen === 'NS' ? 'North - South' : 'East - West';
+            phaseDisplay.className = currentGreen === 'NS' ? 'status-pill status-ns' : 'status-pill status-ew';
+
+            document.getElementById('passedCount').innerText = totalPassed;
+            document.getElementById('avgWait').innerText = totalPassed > 0 ? `${(totalWaitTime / totalPassed).toFixed(1)}s` : '0.0s';
+            document.getElementById('queueNS').innerText = queues.N.length + queues.S.length;
+            document.getElementById('queueEW').innerText = queues.E.length + queues.W.length;
+        }
+
+        function clearQueue(dir, rate) {
+            if (queues[dir].length > 0 && Math.random() < rate) {
+                let car = queues[dir].shift();
+                car.passed = true;
+                totalPassed++;
+            }
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            const roadWidth = 100;
+            const cx = canvas.width / 2;
+            const cy = canvas.height / 2;
+
+            ctx.fillStyle = '#1e293b';
+            ctx.fillRect(cx - roadWidth/2, 0, roadWidth, canvas.height);
+            ctx.fillRect(0, cy - roadWidth/2, canvas.width, roadWidth);
+
+            ctx.strokeStyle = '#cbd5e1';
+            ctx.setLineDash([10, 10]);
+            ctx.lineWidth = 2;
+
+            ctx.beginPath();
+            ctx.moveTo(cx, 0); ctx.lineTo(cx, cy - roadWidth/2);
+            ctx.moveTo(cx, cy + roadWidth/2); ctx.lineTo(cx, canvas.height);
+            ctx.moveTo(0, cy); ctx.lineTo(cx - roadWidth/2, cy);
+            ctx.moveTo(cx + roadWidth/2, cy); ctx.lineTo(canvas.width, cy);
+            ctx.stroke();
+            ctx.setLineDash([]);
+
+            ctx.fillStyle = currentGreen === 'NS' ? '#22c55e' : '#ef4444';
+            ctx.beginPath();
+            ctx.arc(cx - 60, cy - 60, 10, 0, Math.PI * 2);
+            ctx.arc(cx + 60, cy + 60, 10, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.fillStyle = currentGreen === 'EW' ? '#22c55e' : '#ef4444';
+            ctx.beginPath();
+            ctx.arc(cx + 60, cy - 60, 10, 0, Math.PI * 2);
+            ctx.arc(cx - 60, cy + 60, 10, 0, Math.PI * 2);
+            ctx.fill();
+
+            drawQueueCars('N', cx - 25, cy - roadWidth/2 - 15, 0, -18);
+            drawQueueCars('S', cx + 25, cy + roadWidth/2 + 15, 0, 18);
+            drawQueueCars('W', cx - roadWidth/2 - 15, cy + 25, -18, 0);
+            drawQueueCars('E', cx + roadWidth/2 + 15, cy - 25, 18, 0);
+        }
+
+        function drawQueueCars(dir, startX, startY, stepX, stepY) {
+            let count = queues[dir].length;
+            ctx.fillStyle = (dir === 'N' || dir === 'S') ? '#38bdf8' : '#eab308';
+            for (let i = 0; i < Math.min(count, 12); i++) {
+                ctx.beginPath();
+                ctx.arc(startX + i * stepX, startY + i * stepY, 6, 0, Math.PI * 2);
+                ctx.fill();
+            }
+            if (count > 12) {
+                ctx.fillStyle = '#ffffff';
+                ctx.font = '10px sans-serif';
+                ctx.fillText(`+${count - 12}`, startX + 12 * stepX - 5, startY + 12 * stepY + 3);
+            }
+        }
+
+        function gameLoop() {
+            let now = performance.now();
+            let dt = (now - lastTime) / 1000;
+            lastTime = now;
+
+            updateSimulation(dt);
+            draw();
+
+            requestAnimationFrame(gameLoop);
+        }
+
+        updateSliders();
+        resetSim();
+        gameLoop();
+    </script>
 </body>
 </html>
+```
